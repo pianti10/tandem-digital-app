@@ -25,21 +25,21 @@ const conf_password = ref('')
                 placeholder="Nombre" />
             </label>
             <label>
-                <span>Ingrese su nombre</span>
+                <span>Ingrese su apellido</span>
                 <input 
                 type="text" 
                 v-model="apellido" 
                 placeholder="Apellido" />
             </label>
             <label>
-                <span>Ingrese su nombre</span>
+                <span>Ingrese su email</span>
                 <input 
                 type="text" 
                 v-model="email" 
                 placeholder="ejemp@gmail.com" />
             </label>
             <label>
-                <span>Ingrese su nombre</span>
+                <span>Ingrese su teléfono</span>
                 <input 
                 type="text" 
                 v-model="teléfono" 

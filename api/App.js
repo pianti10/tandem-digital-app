@@ -1,7 +1,7 @@
 const Connection = require("mssql").Connection;
 
 const config = {
-  server: "TANDEM-DIGITAL-TEST",
+  server: "tandemDigitalTest",
   authentication: {
     type: "default",
     options: {
