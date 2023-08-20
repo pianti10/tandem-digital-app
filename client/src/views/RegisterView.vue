@@ -4,7 +4,7 @@ import { ref } from 'vue'
 const nombre = ref('')
 const apellido = ref('')
 const email = ref('')
-const teléfono = ref('')
+const telefono = ref('')
 const usuario = ref('')
 const password = ref('')
 const conf_password = ref('')
@@ -42,7 +42,7 @@ const conf_password = ref('')
                 <span>Ingrese su teléfono</span>
                 <input 
                 type="text" 
-                v-model="teléfono" 
+                v-model="telefono" 
                 placeholder="tel: " />
             </label>
             <label>
