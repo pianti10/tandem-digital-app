@@ -5,12 +5,12 @@ Vue.use(VueRouter);
 
 export const routes = [
   {
-    path: "/login",
+    path: "/",
     name: "Login",
     component: () => import("./views/LoginView.vue"),
   },
   {
-    path: "/",
+    path: "/usuarios",
     name: "Usuarios",
     component: () => import("./views/UsuariosView.vue"),
   },
@@ -25,18 +25,5 @@ const router = new VueRouter({
   mode: "hash",
   routes,
 });
-
-router.beforeEach(async (to, from, next) => {
-    if(to.matched.some(record => record.meta.requiresAuth)) {
-        //Authentication check
-        const token = localStorage.getItem('token')
-        if(token) {
-            //revisa si el token es valido
-            return next()
-        }
-        return next('/login')
-    }
-    next();
-})
 
 export default router;

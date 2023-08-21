@@ -6,11 +6,13 @@ const createUsers = usersController.createUsers;
 const getUserById = usersController.getUserById;
 const deleteUserById = usersController.deleteUserById;
 const updateUserById = usersController.updateUserById;
+const login = usersController.login;
 
 const router = express.Router();
 
 
 router.get('/users', getUsers)
+router.post('/login', login)
 router.post('/users', createUsers)
 router.get('/users/:id', getUserById)
 router.delete('/users/:id', deleteUserById);

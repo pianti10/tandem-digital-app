@@ -1,78 +1,61 @@
-<script setup>
-import { ref } from 'vue'
-
-const nombre = ref('')
-const apellido = ref('')
-const email = ref('')
-const telefono = ref('')
-const usuario = ref('')
-const password = ref('')
-const conf_password = ref('')
-</script>
-
 <template>
-    <main>
-        <header>
-            <h1 class="">Registro</h1>
-            <p>Crea una cuenta</p>
-        </header>
-        <form @submit.prevent="">
-            <label>
-                <span>Ingrese su nombre</span>
-                <input 
-                type="text" 
-                v-model="nombre" 
-                placeholder="Nombre" />
-            </label>
-            <label>
-                <span>Ingrese su apellido</span>
-                <input 
-                type="text" 
-                v-model="apellido" 
-                placeholder="Apellido" />
-            </label>
-            <label>
-                <span>Ingrese su email</span>
-                <input 
-                type="text" 
-                v-model="email" 
-                placeholder="ejemp@gmail.com" />
-            </label>
-            <label>
-                <span>Ingrese su teléfono</span>
-                <input 
-                type="text" 
-                v-model="telefono" 
-                placeholder="tel: " />
-            </label>
-            <label>
-                <span>Ingrese su usuario</span>
-                <input 
-                type="text" 
-                v-model="usuario" 
-                placeholder="usuario" />
-            </label>
-            <label>
-                <span>Ingrese su contraseña</span>
-                <input 
-                type="password" 
-                v-model="password" 
-                placeholder="**********" />
-            </label>
-            <label>
-                <span>Confirme su contraseña</span>
-                <input 
-                type="password" 
-                v-model="conf_password" 
-                placeholder="**********" />
-            </label>
-            <input 
-            type="submit" 
-            value="Login" />
-        </form>
-
-        <footer>
+    <div>
+      <h2>Registro de Usuario</h2>
+      <form @submit.prevent="registrarUsuario">
+        <label>Nombre:</label>
+        <input type="text" v-model="usuario.nombre" />
+  
+        <label>Apellido:</label>
+        <input type="text" v-model="usuario.apellido" />
+  
+        <label>Email:</label>
+        <input type="email" v-model="usuario.email" />
+  
+        <label>Teléfono:</label>
+        <input type="tel" v-model="usuario.telefono" />
+  
+        <label>Usuario:</label>
+        <input type="text" v-model="usuario.usuario" />
+  
+        <label>Contraseña:</label>
+        <input type="password" v-model="usuario.contraseña" />
+  
+        <button type="submit">Registrarse</button>
+      </form>
+      <footer>
             <p>No tienes una cuenta? <router-link to="/register">Registro</router-link></p>
         </footer>
-    </main>
-</template>
+    </div>
+  </template>
+  
+  <script>
+  import axios from 'axios';
+  
+  export default {
+    data() {
+      return {
+        usuario: {
+          nombre: '',
+          apellido: '',
+          email: '',
+          telefono: '',
+          usuario: '',
+          contraseña: '',
+        },
+      };
+    },
+    methods: {
+      async registrarUsuario() {
+        try {
+          const response = await axios.post('http://localhost:3000/users', this.usuario);
+          console.log('Usuario registrado:', response.data);
+          // Puedes redirigir al usuario a donde desees después de registrar
+          this.$router.push('/usuarios');
+        } catch (error) {
+          console.error('Error al registrar usuario:', error);
+        }
+      },
+    },
+  };
+  </script>
+  

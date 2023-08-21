@@ -1,10 +1,22 @@
-@api = http://localhost:3000/users
+@api = http://localhost:3000
 
-GET {{api}}
+GET {{api}}/users
 
 ###
 
-POST {{api}}
+
+POST {{api}}/login
+Content-Type: application/json
+
+{
+    "usuario": "tulio1",
+    "contraseña": "tulio123"
+}
+
+
+###
+
+POST {{api}}/users
 Content-Type: application/json
 
 
@@ -19,25 +31,25 @@ Content-Type: application/json
 
 ###
 
-GET {{api}}/3
+GET {{api}}/users/7
 
 
 ###
 
-DELETE {{api}}/6
+DELETE {{api}}/users/3
 
 
 ###
 
-PUT {{api}}/7
+PUT {{api}}/users/7
 Content-Type: application/json
 
 
 {
-    "nombre": "UPDATED",
-    "apellido": "prueba",
+    "nombre": "tulio",
+    "apellido": "marin",
     "email": "example@gmail.com",
-    "telefono": 123456789,
-    "usuario": "prueba1",
-    "contraseña": "prueba123"
+    "telefono": 123456777,
+    "usuario": "tulio1",
+    "contraseña": "tulio123"
 }
