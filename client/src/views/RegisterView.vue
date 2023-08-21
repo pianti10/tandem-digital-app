@@ -49,7 +49,6 @@
         try {
           const response = await axios.post('http://localhost:3000/users', this.usuario);
           console.log('Usuario registrado:', response.data);
-          // Puedes redirigir al usuario a donde desees después de registrar
           this.$router.push('/usuarios');
         } catch (error) {
           console.error('Error al registrar usuario:', error);
