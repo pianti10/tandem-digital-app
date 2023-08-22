@@ -90,30 +90,49 @@ module.exports.deleteUserById = async (req, res) => {
 };
 
 module.exports.updateUserById = async (req, res) => {
-  const { nombre, apellido, email, telefono, usuario, contraseña } = req.body;
-  const { id } = req.params;
-  if (!nombre || !apellido || !email || !telefono || !usuario || !contraseña) {
-    return res.status(400).json({ msg: "Por favor llene todos los campos" });
-  }
+  const { nombre, apellido, email, telefono, usuario, contraseña, id } = req.body;
+
   try {
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(contraseña, saltRounds);
-
     const pool = await getConnection();
-    await pool
-      .request()
-      .input("nombre", mssql.VarChar, nombre)
-      .input("apellido", mssql.VarChar, apellido)
-      .input("email", mssql.VarChar, email)
-      .input("telefono", mssql.Int, telefono)
-      .input("usuario", mssql.VarChar, usuario)
-      .input("contraseña", mssql.VarChar, hashedPassword)
-      .input("id", mssql.Int, id)
-      .query(querys.updateUserById);
+    const result = await pool.request().input("id", mssql.Int, id).query(querys.getUserById);
+    const user = result.recordset[0];
 
-    res.json({ nombre, apellido, email, telefono, usuario });
+    if (contraseña && contraseña !== user.contraseña) {
+      // La contraseña ha cambiado, generar un nuevo hash de contraseña
+      const saltRounds = 10;
+      const hashedPassword = await bcrypt.hash(contraseña, saltRounds);
+
+      await pool
+        .request()
+        .input("nombre", mssql.VarChar, nombre)
+        .input("apellido", mssql.VarChar, apellido)
+        .input("email", mssql.VarChar, email)
+        .input("telefono", mssql.Int, telefono)
+        .input("usuario", mssql.VarChar, usuario)
+        .input("contraseña", mssql.VarChar, hashedPassword)
+        .input("id", mssql.Int, id)
+        .query(querys.updateUserById);
+
+      res.json({ nombre, apellido, email, telefono, usuario });
+    } else {
+      // No actualizar la contraseña, solo otros campos
+      await pool
+        .request()
+        .input("nombre", mssql.VarChar, nombre)
+        .input("apellido", mssql.VarChar, apellido)
+        .input("email", mssql.VarChar, email)
+        .input("telefono", mssql.Int, telefono)
+        .input("usuario", mssql.VarChar, usuario)
+        .input("contraseña", mssql.VarChar, contraseña)
+        .input("id", mssql.Int, id)
+        .query(querys.updateUserById);
+
+      res.json({ nombre, apellido, email, telefono, usuario });
+    }
   } catch (error) {
     res.status(500);
     res.send(error.message);
   }
 };
+
+

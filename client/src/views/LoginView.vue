@@ -1,5 +1,6 @@
 <template>
     <div class="login-container">
+        <h2 class="headline text-center mt-20 ">Iniciar Sesión</h2>
         <v-form @submit.prevent="login" v-model="valid">
             <v-container>
                 <v-row justify="center">
@@ -83,6 +84,7 @@ export default {
 <style scoped>
 .login-container {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     min-height: 100vh;

@@ -115,7 +115,8 @@ export default {
             email: "",
             telefono: "",
             usuario: "",
-            contraseña: ""
+            contraseña: "",
+            contraseñaOriginal: "",
         },
         defaultItem: {
             id: 0,
