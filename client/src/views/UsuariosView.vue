@@ -154,11 +154,6 @@ export default {
     },
 
     methods: {
-        async initialize() {
-            this.users = await this.fetchUsuarios();
-        },
-
-
         async fetchUsuarios() {
             try {
                 const response = await axios.get('http://localhost:3000/users');
@@ -166,6 +161,9 @@ export default {
             } catch (error) {
                 console.error('Error al obtener usuarios:', error);
             }
+        },
+        async initialize() {
+            this.users = await this.fetchUsuarios();
         },
 
         editItem(item) {

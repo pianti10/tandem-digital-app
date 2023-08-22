@@ -6,6 +6,9 @@ module.exports.getUsers = async (req, res) => {
   try {
     const pool = await getConnection();
     const result = await pool.request().query(querys.getAllUsers);
+    for (let i = 0; i < result.recordset.length; i++) {
+     result.recordset[i].contraseña = ""
+    }
     res.json(result.recordset);
   } catch (error) {
     res.status(500);
@@ -48,16 +51,24 @@ module.exports.createUsers = async (req, res) => {
     return res.status(400).json({ msg: "Por favor llene todos los campos" });
   }
   try {
+    const pool = await getConnection();
+    const userExist = await pool
+      .request()
+      .input("usuario", mssql.VarChar, usuario)
+      .query(querys.loginUser);
+      console.log(userExist.recordset.length)
+      if(userExist.recordset.length > 0) {
+        return res.status(400).json('Ya existe este usuario')
+      }
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(contraseña, saltRounds);
-
-    const pool = await getConnection();
+ 
     await pool
       .request()
       .input("nombre", mssql.VarChar, nombre)
       .input("apellido", mssql.VarChar, apellido)
       .input("email", mssql.VarChar, email)
-      .input("telefono", mssql.Int, telefono)
+      .input("telefono", mssql.VarChar, telefono)
       .input("usuario", mssql.VarChar, usuario)
       .input("contraseña", mssql.VarChar, hashedPassword)
       .query(querys.createNewUser);
@@ -107,7 +118,7 @@ module.exports.updateUserById = async (req, res) => {
         .input("nombre", mssql.VarChar, nombre)
         .input("apellido", mssql.VarChar, apellido)
         .input("email", mssql.VarChar, email)
-        .input("telefono", mssql.Int, telefono)
+        .input("telefono", mssql.VarChar, telefono)
         .input("usuario", mssql.VarChar, usuario)
         .input("contraseña", mssql.VarChar, hashedPassword)
         .input("id", mssql.Int, id)
@@ -121,7 +132,7 @@ module.exports.updateUserById = async (req, res) => {
         .input("nombre", mssql.VarChar, nombre)
         .input("apellido", mssql.VarChar, apellido)
         .input("email", mssql.VarChar, email)
-        .input("telefono", mssql.Int, telefono)
+        .input("telefono", mssql.VarChar, telefono)
         .input("usuario", mssql.VarChar, usuario)
         .input("contraseña", mssql.VarChar, contraseña)
         .input("id", mssql.Int, id)

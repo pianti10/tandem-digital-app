@@ -87,7 +87,7 @@ export default {
         console.log('Usuario registrado:', response.data);
         this.$router.push('/usuarios');
       } catch (error) {
-        this.mostrarError('Error al registrar usuario');
+        this.mostrarError('Error: ' + error.response.data);
         console.error('Error al registrar usuario:', error);
       }
     },
