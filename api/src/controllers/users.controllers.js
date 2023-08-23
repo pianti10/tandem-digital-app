@@ -102,13 +102,13 @@ module.exports.deleteUserById = async (req, res) => {
 
 module.exports.updateUserById = async (req, res) => {
   const { nombre, apellido, email, telefono, usuario, contraseña, id } = req.body;
-
+console.log(contraseña, contraseña.length)
   try {
     const pool = await getConnection();
     const result = await pool.request().input("id", mssql.Int, id).query(querys.getUserById);
     const user = result.recordset[0];
 
-    if (contraseña && contraseña !== user.contraseña) {
+    if (contraseña.length > 0 ) {
       // La contraseña ha cambiado, generar un nuevo hash de contraseña
       const saltRounds = 10;
       const hashedPassword = await bcrypt.hash(contraseña, saltRounds);
@@ -134,7 +134,7 @@ module.exports.updateUserById = async (req, res) => {
         .input("email", mssql.VarChar, email)
         .input("telefono", mssql.VarChar, telefono)
         .input("usuario", mssql.VarChar, usuario)
-        .input("contraseña", mssql.VarChar, contraseña)
+        .input("contraseña", mssql.VarChar, user.contraseña)
         .input("id", mssql.Int, id)
         .query(querys.updateUserById);
 
