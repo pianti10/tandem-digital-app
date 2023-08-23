@@ -7,7 +7,7 @@ module.exports.getUsers = async (req, res) => {
     const pool = await getConnection();
     const result = await pool.request().query(querys.getAllUsers);
     for (let i = 0; i < result.recordset.length; i++) {
-     result.recordset[i].contraseña = ""
+      result.recordset[i].contraseña = "";
     }
     res.json(result.recordset);
   } catch (error) {
@@ -20,7 +20,6 @@ module.exports.login = async (req, res) => {
   const { usuario, contraseña } = req.body;
 
   try {
-    // Buscar el usuario en la base de datos por el nombre de usuario
     const pool = await getConnection();
     const result = await pool
       .request()
@@ -31,8 +30,6 @@ module.exports.login = async (req, res) => {
     if (!user) {
       return res.status(400).json({ message: "No se encontró el usuario" });
     }
-
-    // Comparar la contraseña proporcionada con la contraseña almacenada
     const passwordMatch = await bcrypt.compare(contraseña, user.contraseña);
 
     if (passwordMatch) {
@@ -56,13 +53,12 @@ module.exports.createUsers = async (req, res) => {
       .request()
       .input("usuario", mssql.VarChar, usuario)
       .query(querys.loginUser);
-      console.log(userExist.recordset.length)
-      if(userExist.recordset.length > 0) {
-        return res.status(400).json('Ya existe este usuario')
-      }
+    if (userExist.recordset.length > 0) {
+      return res.status(400).json("Ya existe este usuario");
+    }
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(contraseña, saltRounds);
- 
+
     await pool
       .request()
       .input("nombre", mssql.VarChar, nombre)
@@ -101,15 +97,17 @@ module.exports.deleteUserById = async (req, res) => {
 };
 
 module.exports.updateUserById = async (req, res) => {
-  const { nombre, apellido, email, telefono, usuario, contraseña, id } = req.body;
-console.log(contraseña, contraseña.length)
+  const { nombre, apellido, email, telefono, usuario, contraseña, id } =
+    req.body;
   try {
     const pool = await getConnection();
-    const result = await pool.request().input("id", mssql.Int, id).query(querys.getUserById);
+    const result = await pool
+      .request()
+      .input("id", mssql.Int, id)
+      .query(querys.getUserById);
     const user = result.recordset[0];
 
-    if (contraseña.length > 0 ) {
-      // La contraseña ha cambiado, generar un nuevo hash de contraseña
+    if (contraseña.length > 0) {
       const saltRounds = 10;
       const hashedPassword = await bcrypt.hash(contraseña, saltRounds);
 
@@ -126,7 +124,6 @@ console.log(contraseña, contraseña.length)
 
       res.json({ nombre, apellido, email, telefono, usuario });
     } else {
-      // No actualizar la contraseña, solo otros campos
       await pool
         .request()
         .input("nombre", mssql.VarChar, nombre)
@@ -145,5 +142,3 @@ console.log(contraseña, contraseña.length)
     res.send(error.message);
   }
 };
-
-

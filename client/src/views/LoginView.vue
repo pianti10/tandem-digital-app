@@ -1,6 +1,6 @@
 <template>
     <div class="login-container">
-        <h2 class="headline text-center mt-20 ">Iniciar Sesión</h2>
+        <h2 class="text-center mb-10 v-display-2 font-weight-bold teal--text darken-2">Iniciar Sesión</h2>
         <v-form @submit.prevent="login" v-model="valid">
             <v-container>
                 <v-row justify="center">
@@ -15,7 +15,7 @@
                 </v-row>
                 <v-row justify="center">
                     <v-col cols="12" md="7">
-                        <v-btn type="submit" color="green" dark>Iniciar Sesión</v-btn>
+                        <v-btn type="submit" color="#009688" dark>Iniciar Sesión</v-btn>
                     </v-col>
                 </v-row>
             </v-container>
@@ -91,18 +91,16 @@ export default {
 }
 
 .register-link {
+    margin-top: 10px;
     text-align: center;
 }
 
 .error-alert-container {
-  position: fixed;
-  top: 0;
-  right: 0;
-  margin-top: 20px; /* Ajusta el margen superior según sea necesario */
-  margin-right: 20px; /* Ajusta el margen derecho según sea necesario */
+    position: fixed;
+    top: 0;
+    right: 0;
+    margin-top: 20px;
+    margin-right: 20px;
 }
 
-.error-alert {
-  width: 300px; /* Ajusta el ancho según sea necesario */
-}
 </style>
