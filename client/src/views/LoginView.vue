@@ -21,7 +21,7 @@
             </v-container>
             <footer>
                 <p class="register-link">
-                    <v-btn color="primary" text to="/register">No tienes una cuenta? Registrate</v-btn>
+                    <v-btn color="primary" text to="/register">¿No tienes una cuenta? Registrate</v-btn>
                 </p>
             </footer>
         </v-form>
@@ -48,7 +48,6 @@ export default {
     },
     methods: {
         async login() {
-            console.log('Login method invoked');
             try {
                 const response = await axios.post('http://localhost:3000/login', {
                     usuario: this.usuario,
@@ -66,7 +65,6 @@ export default {
                     }
                 }
             } catch (error) {
-                console.log('Error al iniciar sesión.', error);
                 this.mostrarError('Error al iniciar sesión.');
             }
         },

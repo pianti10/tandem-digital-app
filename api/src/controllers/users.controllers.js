@@ -43,7 +43,6 @@ module.exports.login = async (req, res) => {
 };
 
 module.exports.createUsers = async (req, res) => {
-  console.log(req.body)
   const { nombre, apellido, email, telefono, usuario, contraseña } = req.body;
   if (!nombre || !apellido || !email || !telefono || !usuario || !contraseña) {
     return res.status(400).json({ msg: "Por favor llene todos los campos" });

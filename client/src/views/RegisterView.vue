@@ -22,7 +22,7 @@
         </v-row>
         <v-row justify="center">
           <v-col>
-            <v-text-field v-model="usuario.telefono" label="Teléfono" required maxlength="14"></v-text-field>
+            <v-text-field v-model="usuario.telefono"  maxlength="14" label="Teléfono" required></v-text-field>
           </v-col>
         </v-row>
         <v-row justify="center">
@@ -96,7 +96,7 @@ export default {
 
       if (
         (typeof this.usuario.telefono !== 'number' && !(/^\+?\d+$/.test(telefono))) ||
-        ((telefono.startsWith('+') && telefono.length < 14) || (!telefono.startsWith('+') && telefono.length > 12))
+        ((telefono.startsWith('+') && telefono.length < 14) || (!telefono.startsWith('+') && telefono.length > 10 || telefono.length < 9))
       ) {
         this.mostrarError('Número de teléfono inválido');
         return;
@@ -106,7 +106,7 @@ export default {
         console.log('Usuario registrado:', response.data);
         this.$router.push('/usuarios');
       } catch (error) {
-        this.mostrarError('Error: ' + error.response.data);
+        this.mostrarError(error.response.data);
         console.error('Error al registrar usuario:', error);
       }
     },

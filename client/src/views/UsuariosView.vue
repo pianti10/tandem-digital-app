@@ -39,7 +39,7 @@
                                                 label="E-mail"></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6" md="4">
-                                            <v-text-field v-model="editedItem.telefono" label="Teléfono"></v-text-field>
+                                            <v-text-field v-model="editedItem.telefono" maxlength="14" label="Teléfono"></v-text-field>
                                         </v-col>
                                         <v-col cols=" 12" sm="6" md="4">
                                             <v-text-field v-model="editedItem.usuario" label="Usuario"></v-text-field>
@@ -65,7 +65,7 @@
                     </v-dialog>
                     <v-dialog v-model="dialogDelete" max-width="500px">
                         <v-card>
-                            <v-card-title class="text-h5">Estas seguro de que quieres eliminar este usuario?</v-card-title>
+                            <v-card-title class="text-h5">¿Estás seguro de que quieres eliminar este usuario?</v-card-title>
                             <v-card-actions>
                                 <v-spacer></v-spacer>
                                 <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
@@ -227,7 +227,7 @@ export default {
                     const telefono = this.editedItem.telefono;
                     if (
                         (typeof this.editedItem.telefono !== 'number' && !(/^\+?\d+$/.test(telefono))) ||
-                        ((telefono.startsWith('+') && telefono.length < 14) || (!telefono.startsWith('+') && telefono.length > 12))
+                        ((telefono.startsWith('+') && telefono.length < 14) || (!telefono.startsWith('+') && telefono.length > 10 || telefono.length < 9))
                     ) {
                         this.mostrarError('Número de teléfono inválido');
                         return;
