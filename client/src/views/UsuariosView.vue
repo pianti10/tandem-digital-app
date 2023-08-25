@@ -1,20 +1,22 @@
 <template>
     <div>
-        <h2 class="headline text-center mt-5">Lista de Usuarios</h2>
-
+        <h2 class="text-center mb-15 v-display-2 font-weight-bold teal--text darken-2 mt-5">Lista de Usuarios</h2>
+        <v-alert v-if="errorMensaje" type="error" style="position: fixed; top: 20px; right: 20px">
+            {{ errorMensaje }}
+        </v-alert>
         <v-data-table :headers="headers" :items="users" class="elevation-1" :search="search">
             <template v-slot:top>
                 <v-toolbar flat>
                     <v-spacer></v-spacer>
                     <v-container class="d-flex align-start" style="margin-right: 500px;">
                         <div>
-                            <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line
-                                hide-details></v-text-field>
+                            <v-text-field v-model="search" color="#009688" append-icon="mdi-magnify" label="Search"
+                                single-line hide-details></v-text-field>
                         </div>
                     </v-container>
                     <v-dialog v-model="dialog" max-width="500px">
                         <template v-slot:activator="{ on, attrs }">
-                            <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
+                            <v-btn color="#009688" dark class="mb-2" v-bind="attrs" v-on="on">
                                 Nuevo Usuario
                             </v-btn>
                         </template>
@@ -105,6 +107,7 @@ export default {
             { text: 'Email', value: 'email' },
             { text: 'Teléfono', value: 'telefono' },
             { text: 'Acciones', value: 'actions', sortable: false },
+
         ],
         users: [],
         editedIndex: -1,
@@ -127,6 +130,7 @@ export default {
             usuario: "",
             contraseña: ""
         },
+        errorMensaje: '',
         email: '',
         emailRules: [
             v => !!v || 'E-mail is required',
@@ -215,11 +219,44 @@ export default {
                     this.initialize();
                     this.close();
                 } catch (error) {
-                    console.error('Error al guardar usuario:', error);
+                    const email = /.+@.+\..+/.test(this.editedItem.email);
+                    if (!email) {
+                        this.mostrarError('El correo ingresado es invalido');
+                        return
+                    }
+                    const telefono = this.editedItem.telefono;
+                    if (
+                        (typeof this.editedItem.telefono !== 'number' && !(/^\+?\d+$/.test(telefono))) ||
+                        ((telefono.startsWith('+') && telefono.length < 14) || (!telefono.startsWith('+') && telefono.length > 12))
+                    ) {
+                        this.mostrarError('Número de teléfono inválido');
+                        return;
+                    }
+                    const existingUser = this.users.find(user => user.usuario === this.editedItem.usuario);
+            if (existingUser) {
+                this.mostrarError('Este nombre de usuario ya se encuentra en uso');
+                return;
+            }
                 }
             }
         },
-
+        mostrarError(mensaje) {
+            this.errorMensaje = mensaje;
+            setTimeout(() => {
+                this.errorMensaje = '';
+            }, 4000);
+        },
     },
 }
 </script>
+
+<style>
+.v-data-table-header {
+    background-color: #009688;
+}
+
+.v-data-table-header>tr>th>span {
+    color: white;
+    font-size: 1rem;
+}
+</style>

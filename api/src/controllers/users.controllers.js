@@ -43,6 +43,7 @@ module.exports.login = async (req, res) => {
 };
 
 module.exports.createUsers = async (req, res) => {
+  console.log(req.body)
   const { nombre, apellido, email, telefono, usuario, contraseña } = req.body;
   if (!nombre || !apellido || !email || !telefono || !usuario || !contraseña) {
     return res.status(400).json({ msg: "Por favor llene todos los campos" });
@@ -54,7 +55,7 @@ module.exports.createUsers = async (req, res) => {
       .input("usuario", mssql.VarChar, usuario)
       .query(querys.loginUser);
     if (userExist.recordset.length > 0) {
-      return res.status(400).json("Ya existe este usuario");
+      return res.status(400).json("Ya existe un usuario con este nombre");
     }
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(contraseña, saltRounds);
@@ -106,6 +107,17 @@ module.exports.updateUserById = async (req, res) => {
       .input("id", mssql.Int, id)
       .query(querys.getUserById);
     const user = result.recordset[0];
+
+    if (usuario !== user.usuario) {
+      const userExistResult = await pool
+        .request()
+        .input("usuario", mssql.VarChar, usuario)
+        .query(querys.loginUser);
+
+      if (userExistResult.recordset.length > 0) {
+        return res.status(400).json({ message: "El nombre de usuario ya está en uso" });
+      }
+    }
 
     if (contraseña.length > 0) {
       const saltRounds = 10;
