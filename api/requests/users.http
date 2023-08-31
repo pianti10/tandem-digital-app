@@ -13,6 +13,11 @@ Content-Type: application/json
     "contraseña": "tulio123"
 }
 
+###
+
+POST {{api}}/logout
+Authorization: Bearer {{}}
+
 
 ###
 

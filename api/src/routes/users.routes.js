@@ -2,17 +2,24 @@ const express = require("express");
 const { body, validationResult } = require("express-validator");
 
 const usersController = require("../controllers/users.controllers");
+const path = require('path');
+
 const getUsers = usersController.getUsers;
 const createUsers = usersController.createUsers;
 const getUserById = usersController.getUserById;
 const deleteUserById = usersController.deleteUserById;
 const updateUserById = usersController.updateUserById;
 const login = usersController.login;
+const logout = usersController.logout;
 
 const router = express.Router();
 
 router.get("/users", getUsers);
 router.post("/login", login);
+router.post('/logout', logout, (req, res) => {
+  // Redirige al usuario a la página de inicio de sesión después de cerrar sesión
+  res.redirect('/login');
+});
 router.post(
   "/users",
   [

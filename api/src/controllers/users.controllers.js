@@ -1,6 +1,8 @@
 const { getConnection, mssql } = require("../database/conection");
 const querys = require("../database/querys");
 const bcrypt = require("bcrypt");
+const jwt = require('jsonwebtoken');
+
 
 module.exports.getUsers = async (req, res) => {
   try {
@@ -37,6 +39,24 @@ module.exports.login = async (req, res) => {
     } else {
       res.status(401).json({ message: "Usuario o contraseña incorrecta" });
     }
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
+
+const invalidatedTokens = [];
+
+function invalidateToken(token) {
+  invalidatedTokens.push(token);
+}
+
+module.exports.logout = async (req, res) => {
+  try {
+    const token = req.headers.authorization.split(' ')[1]; // Obtiene el token
+
+    invalidateToken(token);
+
+    res.status(200).json({ message: 'Sesión cerrada exitosamente' });
   } catch (error) {
     res.status(500).send(error.message);
   }

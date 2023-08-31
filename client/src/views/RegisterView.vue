@@ -1,56 +1,44 @@
 <template>
-  <div>
-    <div class="d-flex flex-column justify-center align-center" style="height: 100vh;">
-      <v-form @submit.prevent="registrarUsuario" ref="form" v-model="valid" lazy-validation>
+  <v-container class="fill-height" fluid>
+    <v-row class="fill-height" justify="center" align="center">
+      <v-col cols="12" md="8">
         <div>
-          <h2 class="text-center mb-15 v-display-2 font-weight-bold teal--text darken-2">¡Registra un Nuevo Usuario!</h2>
-        </div>
-        <v-row>
-          <v-col>
-            <v-text-field v-model="usuario.nombre" label="Nombre" required></v-text-field>
-          </v-col>
-        </v-row>
-        <v-row justify="center">
-          <v-col>
-            <v-text-field v-model="usuario.apellido" label="Apellido" required></v-text-field>
-          </v-col>
-        </v-row>
-        <v-row justify="center">
-          <v-col>
-            <v-text-field v-model="usuario.email" :rules="emailRules" label="E-mail" required></v-text-field>
-          </v-col>
-        </v-row>
-        <v-row justify="center">
-          <v-col>
-            <v-text-field v-model="usuario.telefono"  maxlength="14" label="Teléfono" required></v-text-field>
-          </v-col>
-        </v-row>
-        <v-row justify="center">
-          <v-col>
-            <v-text-field v-model="usuario.usuario" label="Usuario" required></v-text-field>
-          </v-col>
-        </v-row>
-        <v-row justify="center">
-          <v-col>
-            <v-text-field type="password" v-model="usuario.contraseña" label="Contraseña" required></v-text-field>
-          </v-col>
-        </v-row>
-        <v-row justify="center">
-          <v-col>
-            <v-text-field type="password" v-model="usuario.confirmarContraseña" label="Confirmar contraseña"
-              required></v-text-field>
-          </v-col>
-        </v-row>
-        <v-row justify="center" class="mt-10">
-          <v-btn type="submit" color="#009688" dark>Registrarse</v-btn>
-        </v-row>
-      </v-form>
+          <div class="d-flex flex-column justify-center align-center">
+            <v-form @submit.prevent="registrarUsuario" ref="form" v-model="valid" lazy-validation>
+              <div>
+                <h2 class="text-center mb-15 v-display-2 font-weight-bold teal--text darken-2">¡Registra un Nuevo Usuario!
+                </h2>
+              </div>
+              <v-row justify="center">
+                <v-col cols="6" md="8">
+                  <v-text-field v-model="usuario.nombre" label="Nombre" required />
+                  <v-text-field v-model="usuario.apellido" label="Apellido" required />
+                  <v-text-field v-model="usuario.email" :rules="emailRules" label="E-mail" required />
+                  <v-text-field v-model="usuario.telefono" maxlength="14" label="Teléfono" required />
+                  <v-text-field v-model="usuario.usuario" label="Usuario" required />
+                  <v-text-field type="password" v-model="usuario.contraseña" label="Contraseña" required />
+                  <v-text-field type="password" v-model="usuario.confirmarContraseña" label="Confirmar contraseña"
+                    required />
+                </v-col>
+              </v-row>
+              <v-row class="mt-4">
+                <v-col cols="12" xs="12" md="5" class="text-center">
+                  <v-btn @click="volverAtras" color="grey" dark>Volver Atrás</v-btn>
+                </v-col>
+                <v-col cols="12" md="5" :class="{ 'ml-5': $vuetify.breakpoint.mdAndUp }" class="text-center">
+                  <v-btn type="submit" color="#009688" dark>Registrarse</v-btn>
+                </v-col>
+              </v-row>
+            </v-form>
 
-    </div>
-    <v-alert v-if="errorMensaje" type="error" style="position: fixed; top: 20px; right: 20px">
-      {{ errorMensaje }}
-    </v-alert>
-  </div>
+          </div>
+          <v-alert v-if="errorMensaje" type="error" style="position: fixed; top: 20px; right: 20px">
+            {{ errorMensaje }}
+          </v-alert>
+        </div>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
   
 <script>
@@ -115,6 +103,10 @@ export default {
       setTimeout(() => {
         this.errorMensaje = '';
       }, 4000);
+    },
+    volverAtras() {
+      // Usa el router para volver atrás
+      this.$router.go(-1);
     },
   },
 };

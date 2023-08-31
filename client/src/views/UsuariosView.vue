@@ -1,91 +1,108 @@
 <template>
-    <div>
-        <h2 class="text-center mb-15 v-display-2 font-weight-bold teal--text darken-2 mt-5">Lista de Usuarios</h2>
-        <v-alert v-if="errorMensaje" type="error" style="position: fixed; top: 20px; right: 20px">
-            {{ errorMensaje }}
-        </v-alert>
-        <v-data-table :headers="headers" :items="users" class="elevation-1" :search="search">
-            <template v-slot:top>
-                <v-toolbar flat>
-                    <v-spacer></v-spacer>
-                    <v-container class="d-flex align-start" style="margin-right: 500px;">
-                        <div>
-                            <v-text-field v-model="search" color="#009688" append-icon="mdi-magnify" label="Search"
-                                single-line hide-details></v-text-field>
-                        </div>
-                    </v-container>
-                    <v-dialog v-model="dialog" max-width="500px">
-                        <template v-slot:activator="{ on, attrs }">
-                            <v-btn color="#009688" dark class="mb-2" v-bind="attrs" v-on="on">
-                                Nuevo Usuario
-                            </v-btn>
+    <v-container class="fill-height" fluid>
+        <v-row class="fill-height" justify="center" align="center">
+            <v-col cols="12" md="12">
+                <div>
+                    <h2 class="text-center mb-15 v-display-2 font-weight-bold teal--text darken-2 mt-5">Lista de Usuarios
+                    </h2>
+                    <v-alert v-if="errorMensaje" type="error" style="position: fixed; top: 20px; right: 20px">
+                        {{ errorMensaje }}
+                    </v-alert>
+                    <v-data-table :headers="headers" :items="users" class="elevation-1" :search="search">
+                        <template v-slot:top>
+                            <v-toolbar flat>
+                                
+                                <v-row>
+                                    <v-col cols="12" xs="4" md="6">
+                                        <v-text-field v-model="search" color="#009688" append-icon="mdi-magnify"
+                                            label="Search" single-line hide-details></v-text-field>
+                                    </v-col>
+                                </v-row>
+
+                                <v-dialog v-model="dialog" max-width="500px">
+                                    <template v-slot:activator="{ on, attrs }">
+                                        <v-btn color="#009688" dark class="mb-2" v-bind="attrs" v-on="on">
+                                            Nuevo Usuario
+                                        </v-btn>
+                                    </template>
+                                    <v-card>
+                                        <v-card-title>
+                                            <span class="text-h5">{{ formTitle }}</span>
+                                        </v-card-title>
+
+                                        <v-card-text>
+                                            <v-container>
+                                                <v-row>
+                                                    <v-col cols="12" sm="6" md="6">
+                                                        <v-text-field v-model="editedItem.nombre"
+                                                            label="Nombre"></v-text-field>
+                                                    </v-col>
+                                                    <v-col cols="12" sm="6" md="6">
+                                                        <v-text-field v-model="editedItem.apellido"
+                                                            label="Apellido"></v-text-field>
+                                                    </v-col>
+                                                    <v-col cols="12" sm="6" md="6">
+                                                        <v-text-field v-model="editedItem.email" :rules="emailRules"
+                                                            label="E-mail"></v-text-field>
+                                                    </v-col>
+                                                    <v-col cols="12" sm="6" md="6">
+                                                        <v-text-field v-model="editedItem.telefono" maxlength="14"
+                                                            label="Teléfono"></v-text-field>
+                                                    </v-col>
+                                                    <v-col cols="12" sm="6" md="6">
+                                                        <v-text-field v-model="editedItem.usuario"
+                                                            label="Usuario"></v-text-field>
+                                                    </v-col>
+                                                    <v-col cols="12" sm="6" md="6">
+                                                        <v-text-field v-model="editedItem.contraseña" label="Contraseña"
+                                                            type="password"></v-text-field>
+                                                    </v-col>
+                                                </v-row>
+                                            </v-container>
+                                        </v-card-text>
+
+                                        <v-card-actions>
+                                            <v-spacer></v-spacer>
+                                            <v-btn color="blue darken-1" text @click="close">
+                                                Cancelar
+                                            </v-btn>
+                                            <v-btn color="blue darken-1" text @click="save">
+                                                Guardar
+                                            </v-btn>
+                                        </v-card-actions>
+                                    </v-card>
+                                </v-dialog>
+                                <v-dialog v-model="dialogDelete" max-width="500px">
+                                    <v-card>
+                                        <v-card-title class="text-h5">¿Estás seguro de que quieres eliminar este
+                                            usuario?</v-card-title>
+                                        <v-card-actions>
+                                            <v-spacer></v-spacer>
+                                            <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
+                                            <v-btn color="blue darken-1" text
+                                                @click="deleteItemConfirm(editedItem)">OK</v-btn>
+                                            <v-spacer></v-spacer>
+                                        </v-card-actions>
+                                    </v-card>
+                                </v-dialog>
+                            </v-toolbar>
                         </template>
-                        <v-card>
-                            <v-card-title>
-                                <span class="text-h5">{{ formTitle }}</span>
-                            </v-card-title>
-
-                            <v-card-text>
-                                <v-container>
-                                    <v-row>
-                                        <v-col cols="12" sm="6" md="4">
-                                            <v-text-field v-model="editedItem.nombre" label="Nombre"></v-text-field>
-                                        </v-col>
-                                        <v-col cols="12" sm="6" md="4">
-                                            <v-text-field v-model="editedItem.apellido" label="Apellido"></v-text-field>
-                                        </v-col>
-                                        <v-col cols="12" sm="6" md="4">
-                                            <v-text-field v-model="editedItem.email" :rules="emailRules"
-                                                label="E-mail"></v-text-field>
-                                        </v-col>
-                                        <v-col cols="12" sm="6" md="4">
-                                            <v-text-field v-model="editedItem.telefono" maxlength="14" label="Teléfono"></v-text-field>
-                                        </v-col>
-                                        <v-col cols=" 12" sm="6" md="4">
-                                            <v-text-field v-model="editedItem.usuario" label="Usuario"></v-text-field>
-                                        </v-col>
-                                        <v-col cols=" 12" sm="6" md="4">
-                                            <v-text-field v-model="editedItem.contraseña" label="Contraseña"
-                                                type="password"></v-text-field>
-                                        </v-col>
-                                    </v-row>
-                                </v-container>
-                            </v-card-text>
-
-                            <v-card-actions>
-                                <v-spacer></v-spacer>
-                                <v-btn color="blue darken-1" text @click="close">
-                                    Cancelar
-                                </v-btn>
-                                <v-btn color="blue darken-1" text @click="save">
-                                    Guardar
-                                </v-btn>
-                            </v-card-actions>
-                        </v-card>
-                    </v-dialog>
-                    <v-dialog v-model="dialogDelete" max-width="500px">
-                        <v-card>
-                            <v-card-title class="text-h5">¿Estás seguro de que quieres eliminar este usuario?</v-card-title>
-                            <v-card-actions>
-                                <v-spacer></v-spacer>
-                                <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-                                <v-btn color="blue darken-1" text @click="deleteItemConfirm(editedItem)">OK</v-btn>
-                                <v-spacer></v-spacer>
-                            </v-card-actions>
-                        </v-card>
-                    </v-dialog>
-                </v-toolbar>
-            </template>
-            <template v-slot:[`item.actions`]="{ item }">
-                <v-icon small class="mr-2" @click="editItem(item)">
-                    mdi-pencil
-                </v-icon>
-                <v-icon small @click="deleteItem(item)">
-                    mdi-delete
-                </v-icon>
-            </template>
-        </v-data-table>
-    </div>
+                        <template v-slot:[`item.actions`]="{ item }">
+                            <v-icon small class="mr-2" @click="editItem(item)">
+                                mdi-pencil
+                            </v-icon>
+                            <v-icon small @click="deleteItem(item)">
+                                mdi-delete
+                            </v-icon>
+                        </template>
+                    </v-data-table>
+                    <div class="text-center mt-5">
+                        <v-btn color="red" dark @click="logout">Cerrar Sesión</v-btn>
+                    </div>
+                </div>
+            </v-col>
+        </v-row>
+    </v-container>
 </template>
   
 <script>
@@ -112,7 +129,7 @@ export default {
         users: [],
         editedIndex: -1,
         editedItem: {
-            id: 0,
+            Id: 0,
             nombre: "",
             apellido: "",
             email: "",
@@ -122,7 +139,7 @@ export default {
             contraseñaOriginal: "",
         },
         defaultItem: {
-            id: 0,
+            Id: 0,
             nombre: "",
             apellido: "",
             email: "",
@@ -140,7 +157,7 @@ export default {
 
     computed: {
         formTitle() {
-            return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+            return this.editedIndex === -1 ? 'Nuevo Usuario' : 'Editar Usuario'
         },
     },
 
@@ -233,10 +250,10 @@ export default {
                         return;
                     }
                     const existingUser = this.users.find(user => user.usuario === this.editedItem.usuario);
-            if (existingUser) {
-                this.mostrarError('Este nombre de usuario ya se encuentra en uso');
-                return;
-            }
+                    if (existingUser) {
+                        this.mostrarError('Este nombre de usuario ya se encuentra en uso');
+                        return;
+                    }
                 }
             }
         },
@@ -246,6 +263,22 @@ export default {
                 this.errorMensaje = '';
             }, 4000);
         },
+
+        async logout() {
+            try {
+                const token = localStorage.getItem('token'); // O dondequiera que almacenes el token
+                await axios.post('http://localhost:3000/logout', null, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                // Redirige al usuario a la página de inicio de sesión
+                this.$router.push('/');
+            } catch (error) {
+                console.error('Error al cerrar sesión:', error);
+            }
+        },
+
     },
 }
 </script>

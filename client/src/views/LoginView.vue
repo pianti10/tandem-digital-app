@@ -1,36 +1,40 @@
 <template>
-    <div class="login-container">
-        <h2 class="text-center mb-10 v-display-2 font-weight-bold teal--text darken-2">Iniciar Sesión</h2>
-        <v-form @submit.prevent="login" v-model="valid">
-            <v-container>
-                <v-row justify="center">
-                    <v-col cols="12" md="12">
-                        <v-text-field v-model="usuario" type="text" label="Nombre de usuario" required></v-text-field>
-                    </v-col>
-                </v-row>
-                <v-row justify="center">
-                    <v-col cols="12" md="12">
-                        <v-text-field type="password" v-model="contraseña" label="Contraseña" required></v-text-field>
-                    </v-col>
-                </v-row>
-                <v-row justify="center">
-                    <v-col cols="12" md="7">
-                        <v-btn type="submit" color="#009688" dark>Iniciar Sesión</v-btn>
-                    </v-col>
-                </v-row>
-            </v-container>
-            <footer>
-                <p class="register-link">
-                    <v-btn color="primary" text to="/register">¿No tienes una cuenta? Registrate</v-btn>
-                </p>
-            </footer>
-        </v-form>
-        <div class="error-alert-container">
-            <v-alert v-if="errorMensaje" type="error">
-                {{ errorMensaje }}
-            </v-alert>
-        </div>
-    </div>
+    <v-container class="fill-height" fluid>
+        <v-row class="fill-height" justify="center" align="center">
+            <v-col cols="12" md="8">
+                <div class="login-container">
+                    <h2 class="text-center mb-15 v-display-2 font-weight-bold teal--text darken-2">Iniciar Sesión</h2>
+                    <v-form @submit.prevent="login" v-model="valid">
+                        <v-container>
+                            <v-row justify="center">
+                                <v-col cols="8" md="10">
+                                    <v-text-field v-model="usuario" type="text" label="Nombre de usuario"
+                                        required></v-text-field>
+                                    <v-text-field type="password" v-model="contraseña" label="Contraseña"
+                                        required></v-text-field>
+                                </v-col>
+                                <v-row class="mt-4">
+                                    <v-col cols="12" xs="12" md="12" class="text-center">
+                                        <v-btn type="submit" color="#009688" dark>Iniciar Sesión</v-btn>
+                                    </v-col>
+                                </v-row>
+                            </v-row>
+                        </v-container>
+                        <footer>
+                            <p class="register-link mt-8">
+                                <v-btn color="primary" text to="/register">¿No tienes una cuenta? Registrate</v-btn>
+                            </p>
+                        </footer>
+                    </v-form>
+                    <div class="error-alert-container">
+                        <v-alert v-if="errorMensaje" type="error">
+                            {{ errorMensaje }}
+                        </v-alert>
+                    </div>
+                </div>
+            </v-col>
+        </v-row>
+    </v-container>
 </template>
 
 
@@ -100,5 +104,4 @@ export default {
     margin-top: 20px;
     margin-right: 20px;
 }
-
 </style>
