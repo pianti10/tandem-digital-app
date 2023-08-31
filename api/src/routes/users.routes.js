@@ -3,6 +3,7 @@ const { body, validationResult } = require("express-validator");
 
 const usersController = require("../controllers/users.controllers");
 const path = require('path');
+const { userExist, userUpdate } = require("../middlewares/UserExistMiddleware");
 
 const getUsers = usersController.getUsers;
 const createUsers = usersController.createUsers;
@@ -36,6 +37,7 @@ router.post(
       }
       return next();
     },
+    userExist
   ],
   createUsers
 );
@@ -57,6 +59,7 @@ router.put(
       }
       return next();
     },
+    userUpdate
   ],
   updateUserById
 );

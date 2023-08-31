@@ -129,7 +129,7 @@ export default {
         users: [],
         editedIndex: -1,
         editedItem: {
-            Id: 0,
+            id: 0,
             nombre: "",
             apellido: "",
             email: "",
@@ -139,7 +139,7 @@ export default {
             contraseñaOriginal: "",
         },
         defaultItem: {
-            Id: 0,
+            id: 0,
             nombre: "",
             apellido: "",
             email: "",

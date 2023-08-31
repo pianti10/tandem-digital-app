@@ -1,8 +1,7 @@
 const { getConnection, mssql } = require("../database/conection");
 const querys = require("../database/querys");
 const bcrypt = require("bcrypt");
-const jwt = require('jsonwebtoken');
-
+const jwt = require("jsonwebtoken");
 
 module.exports.getUsers = async (req, res) => {
   try {
@@ -52,11 +51,11 @@ function invalidateToken(token) {
 
 module.exports.logout = async (req, res) => {
   try {
-    const token = req.headers.authorization.split(' ')[1]; // Obtiene el token
+    const token = req.headers.authorization.split(" ")[1]; // Obtiene el token
 
     invalidateToken(token);
 
-    res.status(200).json({ message: 'Sesión cerrada exitosamente' });
+    res.status(200).json({ message: "Sesión cerrada exitosamente" });
   } catch (error) {
     res.status(500).send(error.message);
   }
@@ -68,17 +67,9 @@ module.exports.createUsers = async (req, res) => {
     return res.status(400).json({ msg: "Por favor llene todos los campos" });
   }
   try {
-    const pool = await getConnection();
-    const userExist = await pool
-      .request()
-      .input("usuario", mssql.VarChar, usuario)
-      .query(querys.loginUser);
-    if (userExist.recordset.length > 0) {
-      return res.status(400).json("Ya existe un usuario con este nombre");
-    }
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(contraseña, saltRounds);
-
+    const pool = await getConnection();
     await pool
       .request()
       .input("nombre", mssql.VarChar, nombre)
@@ -126,17 +117,6 @@ module.exports.updateUserById = async (req, res) => {
       .input("id", mssql.Int, id)
       .query(querys.getUserById);
     const user = result.recordset[0];
-
-    if (usuario !== user.usuario) {
-      const userExistResult = await pool
-        .request()
-        .input("usuario", mssql.VarChar, usuario)
-        .query(querys.loginUser);
-
-      if (userExistResult.recordset.length > 0) {
-        return res.status(400).json({ message: "El nombre de usuario ya está en uso" });
-      }
-    }
 
     if (contraseña.length > 0) {
       const saltRounds = 10;
