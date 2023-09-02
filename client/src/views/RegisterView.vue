@@ -90,7 +90,11 @@ export default {
         return;
       }
       try {
-        const response = await axios.post('http://localhost:3000/users', this.usuario);
+        const response = await axios.post('http://localhost:3000/users', this.usuario, {
+          headers: {
+            Authorization: localStorage.getItem("token")
+          }
+        });
         console.log('Usuario registrado:', response.data);
         this.$router.push('/usuarios');
       } catch (error) {

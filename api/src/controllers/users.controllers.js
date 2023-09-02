@@ -2,7 +2,7 @@ const { getConnection, mssql } = require("../database/conection");
 const querys = require("../database/querys");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-
+const secret = process.env.secret
 module.exports.getUsers = async (req, res) => {
   try {
     const pool = await getConnection();
@@ -34,7 +34,13 @@ module.exports.login = async (req, res) => {
     const passwordMatch = await bcrypt.compare(contraseña, user.contraseña);
 
     if (passwordMatch) {
-      res.status(201).json({ message: "Acceso conseguido" });
+      const payload = {
+        userId: user.id
+      }
+      const token = jwt.sign(payload, secret, {
+        algorithm: "HS256"
+      })
+      res.status(201).json({ message: "Acceso conseguido", token });
     } else {
       res.status(401).json({ message: "Usuario o contraseña incorrecta" });
     }

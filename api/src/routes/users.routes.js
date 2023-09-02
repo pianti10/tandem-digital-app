@@ -4,6 +4,7 @@ const { body, validationResult } = require("express-validator");
 const usersController = require("../controllers/users.controllers");
 const path = require('path');
 const { userExist, userUpdate } = require("../middlewares/UserExistMiddleware");
+const { validateToken } = require("../middlewares/validateToken");
 
 const getUsers = usersController.getUsers;
 const createUsers = usersController.createUsers;
@@ -15,7 +16,7 @@ const logout = usersController.logout;
 
 const router = express.Router();
 
-router.get("/users", getUsers);
+router.get("/users", [validateToken], getUsers);
 router.post("/login", login);
 router.post('/logout', logout, (req, res) => {
   // Redirige al usuario a la página de inicio de sesión después de cerrar sesión

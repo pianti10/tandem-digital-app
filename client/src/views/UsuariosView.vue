@@ -11,7 +11,7 @@
                     <v-data-table :headers="headers" :items="users" class="elevation-1" :search="search">
                         <template v-slot:top>
                             <v-toolbar flat>
-                                
+
                                 <v-row>
                                     <v-col cols="12" xs="4" md="6">
                                         <v-text-field v-model="search" color="#009688" append-icon="mdi-magnify"
@@ -177,7 +177,11 @@ export default {
     methods: {
         async fetchUsuarios() {
             try {
-                const response = await axios.get('http://localhost:3000/users');
+                const response = await axios.get('http://localhost:3000/users', {
+                    headers: {
+                        Authorization: localStorage.getItem("token")
+                    }
+                });
                 return response.data;
             } catch (error) {
                 console.error('Error al obtener usuarios:', error);
@@ -201,7 +205,11 @@ export default {
 
         async deleteItemConfirm(item) {
             try {
-                await axios.delete(`http://localhost:3000/users/${item.id}`);
+                await axios.delete(`http://localhost:3000/users/${item.id}`, {
+                    headers: {
+                        Authorization: localStorage.getItem("token")
+                    }
+                });
                 this.initialize()
                 this.closeDelete()
             } catch (error) {
@@ -229,9 +237,17 @@ export default {
             if (this.editedItem.usuario.length > 0) {
                 try {
                     if (this.editedIndex === -1) {
-                        await axios.post('http://localhost:3000/users', this.editedItem);
+                        await axios.post('http://localhost:3000/users', this.editedItem, {
+                            headers: {
+                                Authorization: localStorage.getItem("token")
+                            }
+                        });
                     } else {
-                        await axios.put(`http://localhost:3000/users/${this.editedItem.id}`, this.editedItem);
+                        await axios.put(`http://localhost:3000/users/${this.editedItem.id}`, this.editedItem, {
+                            headers: {
+                                Authorization: localStorage.getItem("token")
+                            }
+                        });
                     }
                     this.initialize();
                     this.close();
@@ -266,12 +282,12 @@ export default {
 
         async logout() {
             try {
-                const token = localStorage.getItem('token'); // O dondequiera que almacenes el token
                 await axios.post('http://localhost:3000/logout', null, {
                     headers: {
-                        Authorization: `Bearer ${token}`,
+                        Authorization: localStorage.getItem("token"),
                     },
                 });
+                localStorage.removeItem("token")
                 // Redirige al usuario a la página de inicio de sesión
                 this.$router.push('/');
             } catch (error) {

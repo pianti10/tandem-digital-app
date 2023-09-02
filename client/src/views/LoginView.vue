@@ -59,6 +59,7 @@ export default {
                 });
                 console.log('Response', response);
                 if (response.status === 201) {
+                    localStorage.setItem("token", response.data.token)
                     this.$router.push('/usuarios');
                 } else {
                     console.log('Error al iniciar sesión.');
