@@ -5,6 +5,7 @@
                 <div>
                     <h2 class="text-center mb-15 v-display-2 font-weight-bold teal--text darken-2 mt-5">Lista de Usuarios
                     </h2>
+                    <!-- Mensaje de error (se muestra si errorMensaje tiene un valor) -->
                     <v-alert v-if="errorMensaje" type="error" style="position: fixed; top: 20px; right: 20px">
                         {{ errorMensaje }}
                     </v-alert>
@@ -18,60 +19,12 @@
                                             label="Search" single-line hide-details></v-text-field>
                                     </v-col>
                                 </v-row>
+                                <!-- Componente del dialog para agregar/editar usuarios -->
+                                <user-dialog :formTitle="formTitle" :editedItem="editedItem" :dialog="dialog" :users="users"
+                                    :editedIndex="editedIndex" :errorMensaje="errorMensaje" @edit-user="editItem"
+                                    @save-user="save" @close-dialog="close"></user-dialog>
 
-                                <v-dialog v-model="dialog" max-width="500px">
-                                    <template v-slot:activator="{ on, attrs }">
-                                        <v-btn color="#009688" dark class="mb-2" v-bind="attrs" v-on="on">
-                                            Nuevo Usuario
-                                        </v-btn>
-                                    </template>
-                                    <v-card>
-                                        <v-card-title>
-                                            <span class="text-h5">{{ formTitle }}</span>
-                                        </v-card-title>
-
-                                        <v-card-text>
-                                            <v-container>
-                                                <v-row>
-                                                    <v-col cols="12" sm="6" md="6">
-                                                        <v-text-field v-model="editedItem.nombre"
-                                                            label="Nombre"></v-text-field>
-                                                    </v-col>
-                                                    <v-col cols="12" sm="6" md="6">
-                                                        <v-text-field v-model="editedItem.apellido"
-                                                            label="Apellido"></v-text-field>
-                                                    </v-col>
-                                                    <v-col cols="12" sm="6" md="6">
-                                                        <v-text-field v-model="editedItem.email" :rules="emailRules"
-                                                            label="E-mail"></v-text-field>
-                                                    </v-col>
-                                                    <v-col cols="12" sm="6" md="6">
-                                                        <v-text-field v-model="editedItem.telefono" maxlength="14"
-                                                            label="Teléfono"></v-text-field>
-                                                    </v-col>
-                                                    <v-col cols="12" sm="6" md="6">
-                                                        <v-text-field v-model="editedItem.usuario"
-                                                            label="Usuario"></v-text-field>
-                                                    </v-col>
-                                                    <v-col cols="12" sm="6" md="6">
-                                                        <v-text-field v-model="editedItem.contraseña" label="Contraseña"
-                                                            type="password"></v-text-field>
-                                                    </v-col>
-                                                </v-row>
-                                            </v-container>
-                                        </v-card-text>
-
-                                        <v-card-actions>
-                                            <v-spacer></v-spacer>
-                                            <v-btn color="blue darken-1" text @click="close">
-                                                Cancelar
-                                            </v-btn>
-                                            <v-btn color="blue darken-1" text @click="save">
-                                                Guardar
-                                            </v-btn>
-                                        </v-card-actions>
-                                    </v-card>
-                                </v-dialog>
+                                <!-- Diálogo de confirmación para eliminar usuarios -->
                                 <v-dialog v-model="dialogDelete" max-width="500px">
                                     <v-card>
                                         <v-card-title class="text-h5">¿Estás seguro de que quieres eliminar este
@@ -88,6 +41,8 @@
                             </v-toolbar>
                         </template>
                         <template v-slot:[`item.actions`]="{ item }">
+
+                            <!-- Iconos para editar y eliminar usuarios en cada fila de la tabla -->
                             <v-icon small class="mr-2" @click="editItem(item)">
                                 mdi-pencil
                             </v-icon>
@@ -96,6 +51,8 @@
                             </v-icon>
                         </template>
                     </v-data-table>
+
+                    <!-- Botón para cerrar sesión -->
                     <div class="text-center mt-5">
                         <v-btn color="red" dark @click="logout">Cerrar Sesión</v-btn>
                     </div>
@@ -107,12 +64,20 @@
   
 <script>
 import axios from 'axios';
+import UserDialog from '../components/UserDialog.vue'
 
 export default {
+    components: {
+        UserDialog,
+    },
     data: () => ({
         search: '',
+        // Controla si el diálogo de edición de usuario está abierto o cerrado
         dialog: false,
+        // Controla si el diálogo de confirmación para eliminar usuario está abierto o cerrado
         dialogDelete: false,
+
+        // Configuración de las columnas de la tabla de usuarios
         headers: [
             {
                 text: 'Nombre',
@@ -126,7 +91,10 @@ export default {
             { text: 'Acciones', value: 'actions', sortable: false },
 
         ],
+        // Almacena la lista de usuarios recuperada del servidor
         users: [],
+
+        // Índice del usuario editado en la lista de usuarios
         editedIndex: -1,
         editedItem: {
             id: 0,
@@ -138,6 +106,7 @@ export default {
             contraseña: "",
             contraseñaOriginal: "",
         },
+        // Datos predeterminados para un nuevo usuario
         defaultItem: {
             id: 0,
             nombre: "",
@@ -149,6 +118,7 @@ export default {
         },
         errorMensaje: '',
         email: '',
+        // Reglas de validación para el campo de email
         emailRules: [
             v => !!v || 'E-mail is required',
             v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
@@ -156,15 +126,18 @@ export default {
     }),
 
     computed: {
+        // Muestra el título del formulario en función del índice del usuario editado
         formTitle() {
             return this.editedIndex === -1 ? 'Nuevo Usuario' : 'Editar Usuario'
         },
     },
 
     watch: {
+        // Observa el cambio en la propiedad 'dialog' y cierra el diálogo de edición
         dialog(val) {
             val || this.close()
         },
+        // Observa el cambio en la propiedad 'dialogDelete' y cierra el diálogo de confirmación para eliminar usuario
         dialogDelete(val) {
             val || this.closeDelete()
         },
@@ -175,6 +148,7 @@ export default {
     },
 
     methods: {
+        // Función para obtener la lista de usuarios desde el servidor
         async fetchUsuarios() {
             try {
                 const response = await axios.get('http://localhost:3000/users', {
@@ -187,16 +161,19 @@ export default {
                 console.error('Error al obtener usuarios:', error);
             }
         },
+        // Inicializa la lista de usuarios al cargar la página
         async initialize() {
             this.users = await this.fetchUsuarios();
         },
 
+        // Abre el diálogo de edición de usuario
         editItem(item) {
             this.editedIndex = this.users.indexOf(item)
             this.editedItem = Object.assign({}, item)
             this.dialog = true
         },
 
+        // Elimina el usuario seleccionado después de confirmar
         deleteItem(item) {
             this.editedIndex = this.users.indexOf(item)
             this.editedItem = Object.assign({}, item)

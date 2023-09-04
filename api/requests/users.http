@@ -8,11 +8,6 @@ GET {{api}}/users
 POST {{api}}/login
 Content-Type: application/json
 
-{
-    "usuario": "tulio1",
-    "contraseña": "tulio123"
-}
-
 ###
 
 POST {{api}}/logout
@@ -23,16 +18,6 @@ Authorization: Bearer {{}}
 
 POST {{api}}/users
 Content-Type: application/json
-
-
-{
-    "nombre": "prueba",
-    "apellido": "prueba",
-    "email": "example@gmail.com",
-    "telefono": 123456789,
-    "usuario": "prueba1",
-    "contraseña": "prueba123"
-}
 
 ###
 
@@ -48,13 +33,3 @@ DELETE {{api}}/users/3
 
 PUT {{api}}/users/7
 Content-Type: application/json
-
-
-{
-    "nombre": "tulio",
-    "apellido": "marin",
-    "email": "example@gmail.com",
-    "telefono": 123456777,
-    "usuario": "tulio1",
-    "contraseña": "tulio123"
-}

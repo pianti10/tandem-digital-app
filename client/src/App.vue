@@ -12,9 +12,7 @@ import routes from './router';
 export default {
   name: 'App',
 
-  components: {
-  },
-
+    // Configura el enrutador de la aplicación con las rutas importadas
   router: routes,
 
   data: () => ({
