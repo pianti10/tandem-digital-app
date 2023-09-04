@@ -2,7 +2,7 @@
     <v-dialog v-model="dialog" max-width="500px">
         <!-- Boton activador del dialog del Nuevo usuario -->
         <template v-slot:activator="{ on, attrs }">
-            <v-btn color="#009688" dark class="mb-2" v-bind="attrs" v-on="on">
+            <v-btn color="#009688" dark class=" ml-5" v-bind="attrs" v-on="on">
                 Nuevo Usuario
             </v-btn>
         </template>

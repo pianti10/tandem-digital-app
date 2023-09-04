@@ -14,7 +14,7 @@
                             <v-toolbar flat>
 
                                 <v-row>
-                                    <v-col cols="12" xs="4" md="6">
+                                    <v-col xs="6" md="6" sm="6">
                                         <v-text-field v-model="search" color="#009688" append-icon="mdi-magnify"
                                             label="Search" single-line hide-details></v-text-field>
                                     </v-col>
@@ -285,4 +285,9 @@ export default {
     color: white;
     font-size: 1rem;
 }
+
+.v-data-table-header>tr>th>i {
+    display: none !important;
+}
+
 </style>
